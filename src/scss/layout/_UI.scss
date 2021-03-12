@@ -25,9 +25,10 @@ body {
     width: 95%;
     margin: 0 auto;
     padding-top: $separacion / 2;
-    margin-top: $separacion / 2;
+    margin-bottom: $separacion / 2;
 
     .seccion{
+        margin-top: $separacion / 2;
         display: none;
         &:first-of-type{
             display: block;
