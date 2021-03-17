@@ -92,6 +92,7 @@ async function mostrarServicios(){
             //Generar Div contenedor de servicio
             const servicioDiv = document.createElement('DIV');
             servicioDiv.classList.add('servicio');
+            servicioDiv.dataset.idServicio = id;
 
 
             //inyectar precio y nombre al div del servicio
@@ -121,19 +122,37 @@ function seleccionarServicio(e){
     if(elemento.classList.contains('seleccionado')){
         elemento.classList.remove('seleccionado');
         
-        eliminarServicio();
+        const id = elemento.dataset.idServicio;
+        eliminarServicio(id);
     } else {
         elemento.classList.add('seleccionado');
-        agregarServicio();
+
+        const servicioObj = {
+            id: parseInt( elemento.dataset.idServicio ),
+            nombre: elemento.firstElementChild.textContent,
+            precio: elemento.firstElementChild.nextElementSibling.textContent,
+        }
+        
+
+        // console.log(servicioObj);
+
+        agregarServicio(servicioObj);
     }
     
 }
-function agregarServicio(){
-    console.log('Agregando Servicio')
+function agregarServicio(servicioObj){
+    const { servicios } = cita;
+    cita.servicios = [...servicios, servicioObj];
+
+    console.log(cita);
+    
 }
 
-function eliminarServicio(){
-    console.log('Eliminando Servicio')
+function eliminarServicio(id){
+    const { servicios } = cita;
+    cita.servicios = servicios.filter( servicio => servicio.id != id );
+
+    console.log(cita)
 }
 
 function paginaSiguiente(){
