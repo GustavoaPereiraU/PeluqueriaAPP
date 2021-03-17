@@ -1,5 +1,13 @@
 let pagina = 1;
 
+const cita = {
+    nombre: '',
+    fecha: '',
+    hora: '',
+    servicios: []
+
+}
+
 document.addEventListener('DOMContentLoaded', function(){
     iniciarApp()
 });
@@ -19,6 +27,9 @@ function iniciarApp(){
 
     //Paginador
     botonesPaginador();
+
+    //Muestra el resumen de la cita o mensaje de error en caso de no pasar la validación
+    mostrarResumen();
 }
 function mostrarSeccion() {
     //eliminar mostrar-seccion de la seccion anterior
@@ -109,10 +120,20 @@ function seleccionarServicio(e){
 
     if(elemento.classList.contains('seleccionado')){
         elemento.classList.remove('seleccionado');
+        
+        eliminarServicio();
     } else {
         elemento.classList.add('seleccionado');
+        agregarServicio();
     }
     
+}
+function agregarServicio(){
+    console.log('Agregando Servicio')
+}
+
+function eliminarServicio(){
+    console.log('Eliminando Servicio')
 }
 
 function paginaSiguiente(){
@@ -148,4 +169,23 @@ function botonesPaginador(){
     }
 
     mostrarSeccion(); // Cambia la seccion que se muestra por la de la pagina
+}
+
+function mostrarResumen(){
+    //Destructuring
+    const { nombre, fecha, hora, servicio } = cita;
+    
+    //Seleccionar el reusmen
+    const resumenDIV = document.querySelector('.contenido-resumen');
+
+    //validación de objeto
+    if(Object.values(cita).includes('')){
+        const noServicios = document.createElement('P');
+        noServicios.textContent = 'Falta datos de Servicios, fecha, hora, o nombre';
+
+        noServicios.classList.add('invalidar-cita');
+
+        //Agregar a resumenDIV
+        resumenDIV.appendChild(noServicios)
+    }
 }
