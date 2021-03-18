@@ -30,6 +30,15 @@ function iniciarApp(){
 
     //Muestra el resumen de la cita o mensaje de error en caso de no pasar la validación
     mostrarResumen();
+
+    //Almacena el nombre de la cita en el objeto
+    nombreCita();
+
+    //Almacena la fecha de la cita en el objeto
+    fechaCita();
+
+    //Deshabilita dias pasados
+    deshabilitarFechaAnterior();
 }
 function mostrarSeccion() {
     //eliminar mostrar-seccion de la seccion anterior
@@ -207,4 +216,82 @@ function mostrarResumen(){
         //Agregar a resumenDIV
         resumenDIV.appendChild(noServicios)
     }
+}
+
+function nombreCita() {
+    const nombreInput = document.querySelector('#nombre');
+
+    nombreInput.addEventListener('input' , e => {
+        const nombreTexto = e.target.value.trim();
+        // console.log(nombreTexto)
+
+        //Validacion de que enombreTexto debe tener algo
+        if( nombreTexto === '' || nombreTexto.length < 3 ){
+            mostrarAlerta('nombre no valido', 'error')
+        } else {
+            const alerta = document.querySelector('.alerta');
+            if (alerta) {
+                alerta.remove();
+            }
+            cita.nombre = nombreTexto;
+        }
+    });
+}
+
+function mostrarAlerta(mensaje, tipo){
+
+    //si hay una alerta previa no crear otra 
+
+    const alertaPrevia = document.querySelector('.alerta'); 
+    if (alertaPrevia){
+        return;
+    }
+
+    const alerta = document.createElement('DIV');
+    alerta.textContent = mensaje;
+    alerta.classList.add('alerta');
+
+    if (tipo === 'error') {
+        alerta.classList.add('error')
+    }
+    //insertar en el html
+    const formulario = document.querySelector('.formulario');
+    formulario.appendChild( alerta );
+
+    //eliminar la alerta despues de 3 segundos 
+    setTimeout(() => {
+        alerta.remove();
+    }, 3000);
+}
+
+function fechaCita(){
+    const fechaInput = document.querySelector('#fecha');
+    fechaInput.addEventListener('input', e =>{
+        
+        const dia = new Date(e.target.value).getUTCDay();
+
+        if([0].includes(dia)){
+            fechaInput.value = '';
+            mostrarAlerta('No se agendan citas los domingos.', 'error');
+        } else {
+            cita.fecha = fechaInput.value;
+            console.log(cita)
+        }
+    })
+}
+
+function deshabilitarFechaAnterior(){
+    const inputFechas = document.querySelector('#fecha');
+    
+    const fechaAhora = new Date();
+    const year = fechaAhora.getUTCFullYear();
+    const month = fechaAhora.getUTCMonth() + 1;
+    const day = fechaAhora.getDate();
+
+    //formato deseado: AAA-MM-DD
+    const fechaDeshabilitar =  `${year}-${month < 10 ? `0${month}` : month}-${day}`;
+    
+
+    inputFechas.min = fechaDeshabilitar;
+
 }
